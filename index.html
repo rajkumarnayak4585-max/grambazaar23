@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GramBazaar | Raj Kumar Nayak</title>
+<style>
+:root{--g:#17613c;--dark:#103d29;--lime:#dff17c;--bg:#f6f8f1}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:#222}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+header{background:var(--dark);color:white;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-size:27px;font-weight:900}.logo span{color:var(--lime)}
+header small{display:block;font-size:11px;margin-top:5px;color:#d5e4d7}
+.btn{border:0;padding:12px 17px;border-radius:9px;font-weight:bold}
+.green{background:var(--g);color:white}.lime{background:var(--lime);color:var(--dark)}
+nav{display:flex;gap:8px;padding:12px 5%;overflow-x:auto;background:white;position:sticky;top:0;z-index:5;box-shadow:0 2px 9px #00000009}
+nav button{border:0;border-radius:22px;background:#edf1e8;padding:11px 15px;white-space:nowrap}
+nav button.active,nav button:hover{background:var(--g);color:white}
+.hero{margin:24px auto;width:90%;max-width:1350px;min-height:340px;padding:40px;border-radius:22px;color:white;display:flex;align-items:center;background:linear-gradient(90deg,#103d29ed,#103d2950),url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1500&q=85') center/cover}
+.hero h1{font-size:clamp(36px,5vw,58px);margin:15px 0}
+.hero p{max-width:520px;line-height:1.8}
+main{width:90%;max-width:1350px;margin:30px auto 60px}
+.page{display:none}.page.active{display:block}
+.heading{margin:25px 0 18px}.heading h2{color:var(--dark);margin:0;font-size:27px}
+.heading p{color:#777;font-size:14px}
+.categories{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.cat{background:white;border:1px solid #e5e9df;border-radius:15px;text-align:center;padding:17px 6px;cursor:pointer}
+.cat:hover{border-color:var(--g);transform:translateY(-3px)}
+.cat .emoji{font-size:32px}.cat h3{font-size:13px;margin:10px 0 4px}
+.tools{display:flex;gap:10px;margin:20px 0;flex-wrap:wrap}
+.tools input{flex:1;min-width:180px}
+input,textarea,select{border:1px solid #dce2d8;background:white;border-radius:9px;padding:12px;width:100%}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}
+.card{background:white;border-radius:15px;overflow:hidden;border:1px solid #e8ebe4;transition:.2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 9px 24px #00000010}
+.card img{width:100%;height:180px;object-fit:cover;background:#e8eee3;display:block}
+.info{padding:14px}.category{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--g);font-weight:bold}
+.info h3{font-size:16px;margin:9px 0}
+.info p{font-size:12px;color:#777;min-height:30px;line-height:1.5}
+.price{font-size:19px;color:var(--dark);font-weight:bold;margin:12px 0}
+.price small{font-size:11px;color:#777;font-weight:normal}
+.add{width:100%;border:0;border-radius:8px;background:var(--g);color:white;padding:11px;font-weight:bold}
+.add:hover{background:var(--dark)}
+.panel{background:white;border:1px solid #e5e9df;border-radius:15px;padding:22px;margin:18px 0}
+.empty{text-align:center;padding:45px 10px;color:#777}
+.empty span{font-size:45px}
+.cartrow{display:grid;grid-template-columns:75px 1fr auto;gap:13px;align-items:center;padding:14px 0;border-bottom:1px solid #eee}
+.cartrow img{width:75px;height:75px;object-fit:cover;border-radius:10px}
+.cartrow h3{font-size:15px;margin:0 0 8px}
+.qty{display:flex;gap:10px;align-items:center;margin-top:8px}
+.qty button{border:0;background:#eaf1e6;border-radius:6px;padding:6px 12px}
+.remove{background:none;border:0;color:#c43b35;font-size:12px;margin-top:7px}
+.total{max-width:430px;margin:18px 0 0 auto}
+.total div{display:flex;justify-content:space-between;padding:10px 0}
+.total .final{border-top:1px solid #ddd;color:var(--dark);font-size:21px;font-weight:bold}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.full{grid-column:1/-1}
+.note{background:#eff5e7;border-radius:9px;padding:12px;font-size:13px;line-height:1.7}
+footer{background:var(--dark);color:white;padding:35px 5%;text-align:center;line-height:1.8}
+footer p{font-size:13px;color:#d4e1d6}
+#toast{display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--dark);color:white;padding:14px 20px;border-radius:10px;z-index:10}
+@media(max-width:950px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.categories{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){main,.hero{width:92%}.hero{padding:24px;min-height:310px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card img{height:140px}.info{padding:10px}.info h3{font-size:14px}.price{font-size:16px}.add{font-size:12px;padding:10px}.categories{gap:8px}.cat h3{font-size:11px}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.cartrow{grid-template-columns:58px 1fr auto;gap:8px}.cartrow img{width:58px;height:58px}.panel{padding:14px}}
+@media(max-width:350px){.grid{grid-template-columns:1fr}.card img{height:190px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🌿 Gram<span>Bazaar</span><small>YOUR VILLAGE • YOUR MARKET</small></div>
+  <button class="btn lime" onclick="page('cart')">🛒 Cart (<span id="count">0</span>)</button>
+</header>
+
+<nav id="nav">
+  <button class="active" data-page="home" onclick="page('home')">🏠 Home</button>
+  <button data-page="fruits" onclick="page('fruits')">🍎 Fruits</button>
+  <button data-page="vegetables" onclick="page('vegetables')">🥦 Vegetables</button>
+  <button data-page="furniture" onclick="page('furniture')">🪑 Furniture</button>
+  <button data-page="pots" onclick="page('pots')">🏺 Pots</button>
+  <button data-page="homegoods" onclick="page('homegoods')">🏡 Home Products</button>
+  <button data-page="cart" onclick="page('cart')">🛒 Cart</button>
+  <button data-page="contact" onclick="page('contact')">☎ Contact</button>
+</nav>
+
+<section class="hero" id="hero">
+  <div>
+    <b style="color:var(--lime)">WELCOME TO GRAMBAZAAR</b>
+    <h1>Good Products.<br>Better Living.</h1>
+    <p>Fresh fruits, vegetables, wooden furniture, traditional pots and beautiful home products — all in one place.</p>
+    <button class="btn lime" onclick="page('shop')">Explore All Products →</button>
+  </div>
+</section>
+
+<main>
+<section id="home" class="page active">
+  <div class="heading"><h2>Shop by Category</h2><p>Choose your favourite collection.</p></div>
+  <div class="categories">
+    <div class="cat" onclick="page('fruits')"><div class="emoji">🍎</div><h3>Fruits</h3></div>
+    <div class="cat" onclick="page('vegetables')"><div class="emoji">🥦</div><h3>Vegetables</h3></div>
+    <div class="cat" onclick="page('furniture')"><div class="emoji">🪑</div><h3>Wooden Furniture</h3></div>
+    <div class="cat" onclick="page('pots')"><div class="emoji">🏺</div><h3>Pots & Utensils</h3></div>
+    <div class="cat" onclick="page('homegoods')"><div class="emoji">🏡</div><h3>Home Products</h3></div>
+  </div>
+  <div class="heading"><h2>✨ All Products</h2><p>Search, explore and add products to your cart.</p></div>
+  <div class="tools">
+    <input id="search" placeholder="🔍 Search products..." oninput="renderHome()">
+    <select id="sort" onchange="renderHome()" style="width:auto">
+      <option value="default">Recommended</option><option value="low">Price: Low to High</option><option value="high">Price: High to Low</option><option value="name">Name A-Z</option>
+    </select>
+  </div>
+  <div class="grid" id="homeGrid"></div>
+</section>
+
+<section id="shop" class="page">
+  <div class="heading"><h2>🛍️ All Products</h2><p>Complete GramBazaar collection.</p></div>
+  <input id="searchAll" placeholder="Search products..." oninput="renderAllProducts()" style="margin-bottom:18px">
+  <div id="allGrid" class="grid"></div>
+</section>
+
+<section id="fruits" class="page"><div class="heading"><h2>🍎 Fresh Fruits</h2><p>Seasonal fruit collection.</p></div><div class="grid" id="fruitsGrid"></div></section>
+<section id="vegetables" class="page"><div class="heading"><h2>🥦 Fresh Vegetables</h2><p>Daily kitchen essentials.</p></div><div class="grid" id="vegetablesGrid"></div></section>
+<section id="furniture" class="page"><div class="heading"><h2>🪑 Wooden Furniture</h2><p>Tables, chairs, beds, doors and more.</p></div><div class="grid" id="furnitureGrid"></div></section>
+<section id="pots" class="page"><div class="heading"><h2>🏺 Pots & Utensils</h2><p>Clay pots, planters and household utensils.</p></div><div class="grid" id="potsGrid"></div></section>
+<section id="homegoods" class="page"><div class="heading"><h2>🏡 Home Products</h2><p>Decoration, plants, lights and garden products.</p></div><div class="grid" id="homegoodsGrid"></div></section>
+
+<section id="cart" class="page">
+  <div class="heading"><h2>🛒 Shopping Cart</h2><p>Manage your products and order details.</p></div>
+  <div class="panel" id="cartItems"></div>
+  <div class="panel" id="checkout">
+    <h2 style="color:var(--dark)">Delivery Details</h2>
+    <form id="orderForm">
+      <div class="formgrid">
+        <input name="name" placeholder="Customer Name *" required>
+        <input name="phone" placeholder="10-digit Mobile *" type="tel" pattern="[0-9]{10}" maxlength="10" required>
+        <input name="city" placeholder="Village / City *" required>
+        <input name="pin" placeholder="PIN Code">
+        <textarea name="address" class="full" rows="3" placeholder="Full Address *" required></textarea>
+        <textarea name="note" class="full" rows="2" placeholder="Order instructions (optional)"></textarea>
+        <button type="submit" class="btn green full">📲 Order via WhatsApp</button>
+      </div>
+    </form>
+    <p class="note">Final stock availability and delivery charges must be confirmed by the seller.</p>
+  </div>
+</section>
+
+<section id="contact" class="page">
+  <div class="panel">
+    <h2 style="color:var(--dark)">🌿 About GramBazaar</h2>
+    <p>Local shopping made simple: fruits, vegetables, furniture, pots and home products.</p>
+    <p><b>Creator:</b> Raj Kumar Nayak</p>
+    <p><b>Class:</b> 9th</p>
+    <p><b>Project:</b> Online Shopping Website</p>
+    <p><b>Location:</b> Shahdol, Madhya Pradesh (edit as needed)</p>
+    <button class="btn green" onclick="page('shop')">Shop Now</button>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="logo">🌿 Gram<span>Bazaar</span></div>
+  <p>Your Village. Your Market.</p>
+  <p>Created by Raj Kumar Nayak | Class 9th</p>
+  <p>© 2026 GramBazaar Student Project</p>
+</footer>
+<div id="toast"></div>
+
+<script>
+// Replace with your real seller WhatsApp number including country code.
+// Example: 919876543210
+const SELLER_WHATSAPP = "919876543210";
+
+const products = [
+{id:1,n:"Apple",c:"fruits",p:140,u:"kg",d:"Fresh crisp apples",i:"photo-1560806887-1e4cd0b6cbd6"},
+{id:2,n:"Mango",c:"fruits",p:100,u:"kg",d:"Sweet seasonal mangoes",i:"photo-1553279768-865429fa0078"},
+{id:3,n:"Banana",c:"fruits",p:50,u:"dozen",d:"Naturally sweet bananas",i:"photo-1571771894821-ce9b6c11b08e"},
+{id:4,n:"Orange",c:"fruits",p:80,u:"kg",d:"Juicy fresh oranges",i:"photo-1547514701-42782101795e"},
+{id:5,n:"Grapes",c:"fruits",p:110,u:"kg",d:"Fresh green grapes",i:"photo-1537640538966-79f369143f8f"},
+{id:6,n:"Pomegranate",c:"fruits",p:160,u:"kg",d:"Juicy red pomegranates",i:"photo-1541344999736-83eca272f6fc"},
+{id:7,n:"Potato",c:"vegetables",p:30,u:"kg",d:"Everyday kitchen staple",i:"photo-1518977676601-b53f82aba655"},
+{id:8,n:"Tomato",c:"vegetables",p:40,u:"kg",d:"Ripe red tomatoes",i:"photo-1546094096-0df4bcaaa337"},
+{id:9,n:"Onion",c:"vegetables",p:35,u:"kg",d:"Fresh cooking onions",i:"photo-1508747703725-719777637510"},
+{id:10,n:"Carrot",c:"vegetables",p:50,u:"kg",d:"Crunchy carrots",i:"photo-1445282768818-728615cc910a"},
+{id:11,n:"Broccoli",c:"vegetables",p:90,u:"piece",d:"Fresh green vegetables",i:"photo-1459411621453-7b03977f4bfc"},
+{id:12,n:"Capsicum",c:"vegetables",p:80,u:"kg",d:"Colourful bell peppers",i:"photo-1563565375-f3fdfdbefa83"},
+{id:13,n:"Wooden Table",c:"furniture",p:8500,u:"piece",d:"Classic dining table",i:"photo-1533090481720-856c6e3c1fdc"},
+{id:14,n:"Wooden Chair",c:"furniture",p:2200,u:"piece",d:"Traditional wooden chair",i:"photo-1503602642458-232111445657"},
+{id:15,n:"Wooden Bed",c:"furniture",p:15000,u:"piece",d:"Bedroom furniture",i:"photo-1505693416388-ac5ce068fe85"},
+{id:16,n:"Wooden Door",c:"furniture",p:6500,u:"piece",d:"Wooden door design",i:"photo-1513694203232-719a280e022f"},
+{id:17,n:"Wooden Stool",c:"furniture",p:1200,u:"piece",d:"Compact wooden stool",i:"photo-1598300053653-3e2f4e8f0b2c"},
+{id:18,n:"Bookshelf",c:"furniture",p:5500,u:"piece",d:"Books and storage shelf",i:"photo-1594620302200-9a762244a156"},
+{id:19,n:"Clay Flower Pot",c:"pots",p:120,u:"piece",d:"Traditional clay planter",i:"photo-1485955900006-10f4d324d411"},
+{id:20,n:"Clay Water Pot",c:"pots",p:250,u:"piece",d:"Traditional earthen pot",i:"photo-1578500494198-246f612d3b3d"},
+{id:21,n:"Ceramic Bowl",c:"pots",p:180,u:"piece",d:"Decorative bowl",i:"photo-1493106641515-6b5631de4bb9"},
+{id:22,n:"Flower Vase",c:"pots",p:450,u:"piece",d:"Home decoration vase",i:"photo-1578500494198-246f612d3b3d"},
+{id:23,n:"Garden Plants",c:"homegoods",p:180,u:"piece",d:"Green indoor plants",i:"photo-1416879595882-3373a0480b5b"},
+{id:24,n:"Jute Shopping Bag",c:"homegoods",p:100,u:"piece",d:"Reusable shopping bag",i:"photo-1590874103328-eac38a683ce7"},
+{id:25,n:"Storage Box",c:"homegoods",p:900,u:"piece",d:"Household storage",i:"photo-1600210492486-724fe5c67fb0"},
+{id:26,n:"Decorative Lamp",c:"homegoods",p:650,u:"piece",d:"Warm home lighting",i:"photo-1507473885765-e6ed057f782c"}
+];
+
+const names={fruits:"Fruits",vegetables:"Vegetables",furniture:"Wooden Furniture",pots:"Pots & Utensils",homegoods:"Home Products"};
+const img=id=>"https://images.unsplash.com/"+id+"?auto=format&fit=crop&w=650&q=80";
+let cart={};
+try{cart=JSON.parse(localStorage.getItem("grambazaar-cart")||"{}")||{};}catch(e){cart={};}
+
+function money(n){return "₹"+Number(n).toLocaleString("en-IN");}
+function card(p){
+return `<article class="card">
+<img src="${img(p.i)}" alt="${p.n}" loading="lazy" onerror="this.onerror=null;this.src='https://placehold.co/600x400/e8eee3/17613c?text=GramBazaar'">
+<div class="info"><div class="category">${names[p.c]}</div>
+<h3>${p.n}</h3><p>${p.d}</p>
+<div class="price">${money(p.p)} <small>/ ${p.u}</small></div>
+<button class="add" onclick="add(${p.id})">＋ Add to Cart</button></div></article>`;
+}
+function draw(id,list){
+const el=document.getElementById(id);
+if(el)el.innerHTML=list.length?list.map(card).join(""):'<div class="empty">No matching products found.</div>';
+}
+function renderHome(){
+let list=[...products];
+const q=(document.getElementById("search")?.value||"").toLowerCase().trim();
+const sort=document.getElementById("sort")?.value||"default";
+list=list.filter(p=>(p.n+" "+p.c+" "+p.d).toLowerCase().includes(q));
+if(sort==="low")list.sort((a,b)=>a.p-b.p);
+if(sort==="high")list.sort((a,b)=>b.p-a.p);
+if(sort==="name")list.sort((a,b)=>a.n.localeCompare(b.n));
+draw("homeGrid",list);
+}
+function renderAllProducts(){
+const q=(document.getElementById("searchAll")?.value||"").toLowerCase().trim();
+draw("allGrid",products.filter(p=>(p.n+" "+p.c).toLowerCase().includes(q)));
+}
+function page(id){
+const el=document.getElementById(id);if(!el)return;
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+el.classList.add("active");
+document.getElementById("hero").style.display=id==="home"?"flex":"none";
+document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+if(id==="cart")renderCart();
+window.scrollTo({top:0,behavior:"smooth"});
+}
+function save(){
+try{localStorage.setItem("grambazaar-cart",JSON.stringify(cart));}catch(e){}
+updateCount();renderCart();
+}
+function updateCount(){
+document.getElementById("count").textContent=Object.values(cart).reduce((a,n)=>a+(Number(n)||0),0);
+}
+function toast(text){
+const el=document.getElementById("toast");el.textContent=text;el.style.display="block";
+clearTimeout(toast.t);toast.t=setTimeout(()=>el.style.display="none",2000);
+}
+function add(id){cart[id]=(Number(cart[id])||0)+1;save();toast("Product added to cart ✓");}
+function qty(id,n){cart[id]=(Number(cart[id])||0)+n;if(cart[id]<=0)delete cart[id];save();}
+function remove(id){delete cart[id];save();toast("Product removed");}
+
+function renderCart(){
+const el=document.getElementById("cartItems");
+if(!el)return;
+const items=products.filter(p=>(Number(cart[p.id])||0)>0);
+const form=document.getElementById("checkout");
+if(!items.length){
+el.innerHTML='<div class="empty"><span>🛒</span><h3>Your cart is empty</h3><p>Add your favourite products first.</p><button class="btn green" onclick="page(\'shop\')">Shop Now</button></div>';
+form.style.display="none";return;
+}
+form.style.display="block";
+let subtotal=0,html="";
+items.forEach(p=>{
+const q=Number(cart[p.id]),sum=p.p*q;subtotal+=sum;
+html+=`<div class="cartrow"><img src="${img(p.i)}" alt="${p.n}">
+<div><h3>${p.n}</h3><b>${money(p.p)} / ${p.u}</b>
+<div class="qty"><button onclick="qty(${p.id},-1)">−</button><b>${q}</b><button onclick="qty(${p.id},1)">+</button></div>
+<button class="remove" onclick="remove(${p.id})">Remove</button></div>
+<b>${money(sum)}</b></div>`;
+});
+html+=`<div class="total"><div><span>Subtotal</span><b>${money(subtotal)}</b></div><div><span>Delivery</span><span>Confirm with seller</span></div><div class="final"><span>Total</span><span>${money(subtotal)}</span></div></div>`;
+el.innerHTML=html;
+}
+
+document.getElementById("orderForm").addEventListener("submit",function(e){
+e.preventDefault();
+const items=products.filter(p=>(Number(cart[p.id])||0)>0);
+if(!items.length){toast("Your cart is empty");return;}
+const f=new FormData(this);
+if(!/^\d{10}$/.test(String(f.get("phone")).trim())){toast("Enter a valid 10-digit mobile number");return;}
+if(!/^\d{10,15}$/.test(SELLER_WHATSAPP)||SELLER_WHATSAPP==="919876543210"){
+alert("Change SELLER_WHATSAPP in the code to the seller's real WhatsApp number.");return;
+}
+const total=items.reduce((s,p)=>s+p.p*Number(cart[p.id]),0);
+const message=[
+"🌿 *GramBazaar Order*","",
+...items.map(p=>`${p.n} x ${cart[p.id]} = ${money(p.p*Number(cart[p.id]))}`),
+"",`Estimated total: ${money(total)}`,"",
+`Name: ${f.get("name")}`,`Mobile: ${f.get("phone")}`,
+`City: ${f.get("city")}`,`PIN: ${f.get("pin")||"Not given"}`,
+`Address: ${f.get("address")}`,`Note: ${f.get("note")||"None"}`,
+"","Please confirm product availability and delivery charges."
+].join("\n");
+window.open("https://wa.me/"+SELLER_WHATSAPP+"?text="+encodeURIComponent(message),"_blank");
+});
+
+renderHome();
+renderAllProducts();
+Object.keys(names).forEach(c=>draw(c+"Grid",products.filter(p=>p.c===c)));
+updateCount();renderCart();
+</script>
+</body>
+</html>
